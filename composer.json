@@ -1,0 +1,47 @@
+{
+    "name": "penobit/linq",
+    "description": "Language-Integrated Query (LINQ) for PHP language.",
+    "keywords": [
+        "linq",
+        "query",
+        "array",
+        "php"
+    ],
+    "homepage": "https://github.com/penobit/linq",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "R8",
+            "email": "r8@penobit.com"
+        },
+        {
+            "name": "Penobit",
+            "email": "info@penobit.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.6",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.8 || ^5.0",
+        "symfony/var-dumper": "^3.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Penobit\\Linq\\": "src/linq",
+            "Penobit\\ArrayQuery\\": "src/arrayquery"
+        },
+        "files": [
+            "helpers/linq.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Penobit\\Linq\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
