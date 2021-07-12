@@ -1,12 +1,11 @@
 <?php
 
+use Penobit\ArrayQuery\ArrayQuery;
 use Penobit\ArrayQuery\QueryEngine;
-use Penobit\ArrayQuery\ArrayQueryuery;
 
 if (!function_exists('convert_to_array')) {
-    function convert_to_array($data)
-    {
-        if (!is_array($data) && ! $data instanceof QueryEngine) {
+    function convert_to_array($data) {
+        if (!is_array($data) && !$data instanceof QueryEngine) {
             return [$data];
         }
 
@@ -26,15 +25,15 @@ if (!function_exists('convert_to_array')) {
 if (!function_exists('arrayq')) {
     /**
      * @param $data
+     *
      * @return \Penobit\ArrayQuery\QueryEngine
      */
-    function arrayq($data = [])
-    {
+    function arrayq($data = []) {
         if (!is_array($data)) {
             $data = [];
         }
 
-        $instance = ArrayQueryuery::getInstance();
+        $instance = ArrayQuery::getInstance();
 
         return $instance->collect($data);
     }

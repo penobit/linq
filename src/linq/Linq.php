@@ -2,44 +2,48 @@
 
 namespace Penobit\Linq;
 
-use Penobit\ArrayQuery\Exceptions\InvalidJsonException;
 use Penobit\ArrayQuery\Exceptions\FileNotFoundException;
+use Penobit\ArrayQuery\Exceptions\InvalidJsonException;
 use Penobit\ArrayQuery\QueryEngine;
 
-class Linq extends QueryEngine
-{
-
+class Linq extends QueryEngine {
     /**
-     * Parse valid JSON data to an Array
+     * Parse valid JSON data to an Array.
      *
      * @param string $data
-     * @return array|mixed
+     *
      * @throws InvalidJsonException
+     *
+     * @return array|mixed
      */
-    public function parseData($data)
-    {
-        if (is_null($data)) return [];
-        if(is_array($data) || is_object($data)){
-            $data = json_encode($data, JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE);
+    public function parseData($data) {
+        if (null === $data) {
+            return [];
+        }
+        if (\is_array($data) || \is_object($data)) {
+            $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
         $data = json_decode($data, true);
-        if (json_last_error() != JSON_ERROR_NONE) throw new InvalidJsonException();
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new InvalidJsonException();
+        }
 
         return $data;
     }
 
     /**
-     * Parse data from give file or URL
+     * Parse data from give file or URL.
      *
      * @param string $jsonFile
-     * @return array|mixed
+     *
      * @throws FileNotFoundException
      * @throws InvalidJsonException
+     *
+     * @return array|mixed
      */
-    public function readPath($jsonFile)
-    {
-        if (is_null($jsonFile)) {
+    public function readPath($jsonFile) {
+        if (null === $jsonFile) {
             throw new FileNotFoundException();
         }
 
@@ -53,18 +57,22 @@ class Linq extends QueryEngine
             $path = pathinfo($jsonFile);
             $extension = isset($path['extension']) ? $path['extension'] : null;
 
-            if ($extension != 'json') {
+            if ('json' !== $extension) {
                 throw new InvalidJsonException();
             }
 
             $rawData = file_get_contents($jsonFile);
         }
 
-        if (is_null($rawData)) throw new FileNotFoundException();
+        if (null === $rawData) {
+            throw new FileNotFoundException();
+        }
 
         $data = json_decode($rawData, true);
 
-        if (json_last_error() !== JSON_ERROR_NONE) throw new InvalidJsonException();
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new InvalidJsonException();
+        }
 
         return $data;
     }

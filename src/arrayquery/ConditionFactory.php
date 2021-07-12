@@ -2,201 +2,152 @@
 
 namespace Penobit\ArrayQuery;
 
-use Penobit\ArrayQuery\Exceptions\KeyNotPresentException;
-
-final class ConditionFactory
-{
+final class ConditionFactory {
     /**
-     * Simple equals
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Simple equals.
      *
      * @return bool
      */
-    public static function equal($value, $comparable)
-    {
-        return $value == $comparable;
-    }
-
-    /**
-     * Strict equals
-     *
-     * @param mixed $value
-     * @param mixed $comparable
-     *
-     * @return bool
-     */
-    public static function strictEqual($value, $comparable)
-    {
+    public static function equal($value, $comparable) {
         return $value === $comparable;
     }
 
     /**
-     * Simple not equal
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Strict equals.
      *
      * @return bool
      */
-    public static function notEqual($value, $comparable)
-    {
-        return $value != $comparable;
+    public static function strictEqual($value, $comparable) {
+        return $value === $comparable;
     }
 
     /**
-     * Strict not equal
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Simple not equal.
      *
      * @return bool
      */
-    public static function strictNotEqual($value, $comparable)
-    {
+    public static function notEqual($value, $comparable) {
         return $value !== $comparable;
     }
 
     /**
-     * Strict greater than
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Strict not equal.
      *
      * @return bool
      */
-    public static function greaterThan($value, $comparable)
-    {
+    public static function strictNotEqual($value, $comparable) {
+        return $value !== $comparable;
+    }
+
+    /**
+     * Strict greater than.
+     *
+     * @return bool
+     */
+    public static function greaterThan($value, $comparable) {
         return $value > $comparable;
     }
 
     /**
-     * Strict less than
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Strict less than.
      *
      * @return bool
      */
-    public static function lessThan($value, $comparable)
-    {
+    public static function lessThan($value, $comparable) {
         return $value < $comparable;
     }
 
     /**
-     * Greater or equal
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Greater or equal.
      *
      * @return bool
      */
-    public static function greaterThanOrEqual($value, $comparable)
-    {
+    public static function greaterThanOrEqual($value, $comparable) {
         return $value >= $comparable;
     }
 
     /**
-     * Less or equal
-     *
-     * @param mixed $value
-     * @param mixed $comparable
+     * Less or equal.
      *
      * @return bool
      */
-    public static function lessThanOrEqual($value, $comparable)
-    {
+    public static function lessThanOrEqual($value, $comparable) {
         return $value <= $comparable;
     }
 
     /**
-     * In array
+     * In array.
      *
-     * @param mixed $value
      * @param array $comparable
      *
      * @return bool
      */
-    public static function in($value, $comparable)
-    {
-        return (is_array($comparable) && in_array($value, $comparable));
+    public static function in($value, $comparable) {
+        return \is_array($comparable) && \in_array($value, $comparable, true);
     }
 
     /**
-     * Not in array
+     * Not in array.
      *
-     * @param mixed $value
      * @param array $comparable
      *
      * @return bool
      */
-    public static function notIn($value, $comparable)
-    {
-        return (is_array($comparable) && !in_array($value, $comparable));
+    public static function notIn($value, $comparable) {
+        return \is_array($comparable) && !\in_array($value, $comparable, true);
     }
 
-    public static function inArray($value, $comparable)
-    {
-        if (!is_array($value)) return false;
+    public static function inArray($value, $comparable) {
+        if (!\is_array($value)) {
+            return false;
+        }
 
-        return in_array($comparable, $value);
+        return \in_array($comparable, $value, true);
     }
 
-    public static function inNotArray($value, $comparable)
-    {
+    public static function inNotArray($value, $comparable) {
         return !static::inArray($value, $comparable);
     }
 
     /**
-     * Is null equal
-     *
-     * @param mixed $value
+     * Is null equal.
      *
      * @return bool
      */
-    public static function isNull($value, $comparable)
-    {
-        return is_null($value);
+    public static function isNull($value, $comparable) {
+        return null === $value;
     }
 
     /**
-     * Is not null equal
-     *
-     * @param mixed $value
+     * Is not null equal.
      *
      * @return bool
      */
-    public static function isNotNull($value, $comparable)
-    {
-        return !$value instanceof KeyNotExists && !is_null($value);
+    public static function isNotNull($value, $comparable) {
+        return !$value instanceof KeyNotExists && null !== $value;
     }
 
-    public static function notExists($value, $comparable)
-    {
+    public static function notExists($value, $comparable) {
         return $value instanceof KeyNotExists;
     }
 
-    public static function exists($value, $comparable)
-    {
+    public static function exists($value, $comparable) {
         return !static::notExists($value, $comparable);
     }
 
     /**
-     * Start With
+     * Start With.
      *
-     * @param mixed $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function startWith($value, $comparable)
-    {
-        if (is_array($comparable) || is_array($value) || is_object($comparable) || is_object($value)) {
+    public static function startWith($value, $comparable) {
+        if (\is_array($comparable) || \is_array($value) || \is_object($comparable) || \is_object($value)) {
             return false;
         }
 
-        if (preg_match("/^$comparable/", $value)) {
+        if (preg_match("/^{$comparable}/", $value)) {
             return true;
         }
 
@@ -204,20 +155,18 @@ final class ConditionFactory
     }
 
     /**
-     * End with
+     * End with.
      *
-     * @param mixed $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function endWith($value, $comparable)
-    {
-        if (is_array($comparable) || is_array($value) || is_object($comparable) || is_object($value)) {
+    public static function endWith($value, $comparable) {
+        if (\is_array($comparable) || \is_array($value) || \is_object($comparable) || \is_object($value)) {
             return false;
         }
 
-        if (preg_match("/$comparable$/", $value)) {
+        if (preg_match("/{$comparable}$/", $value)) {
             return true;
         }
 
@@ -225,22 +174,20 @@ final class ConditionFactory
     }
 
     /**
-     * Match with pattern
+     * Match with pattern.
      *
-     * @param mixed $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function match($value, $comparable)
-    {
-        if (is_array($comparable) || is_array($value) || is_object($comparable) || is_object($value)) {
+    public static function match($value, $comparable) {
+        if (\is_array($comparable) || \is_array($value) || \is_object($comparable) || \is_object($value)) {
             return false;
         }
 
         $comparable = trim($comparable);
 
-        if (preg_match("/^$comparable$/", $value)) {
+        if (preg_match("/^{$comparable}$/", $value)) {
             return true;
         }
 
@@ -248,75 +195,70 @@ final class ConditionFactory
     }
 
     /**
-     * Contains substring in string
+     * Contains substring in string.
      *
      * @param string $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function contains($value, $comparable)
-    {
-        return (strpos($value, $comparable) !== false);
+    public static function contains($value, $comparable) {
+        return strpos($value, $comparable) !== false;
     }
 
     /**
-     * Dates equal
+     * Dates equal.
      *
      * @param string $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function dateEqual($value, $comparable, $format = 'Y-m-d')
-    {
+    public static function dateEqual($value, $comparable, $format = 'Y-m-d') {
         $date = date($format, strtotime($value));
-        return $date == $comparable;
+
+        return $date === $comparable;
     }
 
-
     /**
-     * is given value instance of value
+     * is given value instance of value.
      *
      * @param string $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function instance($value, $comparable)
-    {
+    public static function instance($value, $comparable) {
         return $value instanceof $comparable;
     }
 
     /**
-     * is given value exits in given key of array
+     * is given value exits in given key of array.
      *
      * @param string $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function any($value, $comparable)
-    {
-        if (is_array($value)) {
-            return in_array($comparable, $value);
+    public static function any($value, $comparable) {
+        if (\is_array($value)) {
+            return \in_array($comparable, $value, true);
         }
 
         return false;
     }
 
     /**
-     * is given value exits in given key of array
+     * is given value exits in given key of array.
      *
      * @param string $value
      * @param string $comparable
      *
      * @return bool
      */
-    public static function execFunction($value, $comparable)
-    {
-        if (is_array($value)) {
-            return in_array($comparable, $value);
+    public static function execFunction($value, $comparable) {
+        if (\is_array($value)) {
+            return \in_array($comparable, $value, true);
         }
 
         return false;
