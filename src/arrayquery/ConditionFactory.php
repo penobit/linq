@@ -185,9 +185,9 @@ final class ConditionFactory {
             return false;
         }
 
-        $comparable = trim($comparable);
+        $comparable = preg_quote(trim($comparable));
 
-        if (preg_match("/^{$comparable}$/", $value)) {
+        if (preg_match("/^{$comparable}$/ui", $value)) {
             return true;
         }
 
@@ -203,7 +203,7 @@ final class ConditionFactory {
      * @return bool
      */
     public static function contains($value, $comparable) {
-        return strpos($value, $comparable) !== false;
+        return stristr($value, $comparable) !== false;
     }
 
     /**
