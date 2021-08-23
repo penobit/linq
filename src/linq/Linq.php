@@ -20,11 +20,12 @@ class Linq extends QueryEngine {
         if (null === $data) {
             return [];
         }
+
         if (\is_array($data) || \is_object($data)) {
-            $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            // $data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
-        $data = json_decode($data, true);
+        // $data = json_decode($data);
         if (json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidJsonException();
         }

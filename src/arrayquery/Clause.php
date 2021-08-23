@@ -109,9 +109,9 @@ class Clause {
     /**
      * @param array $props
      *
-     * @return $this
+     * @return self
      */
-    public function fresh($props = []) {
+    public function fresh($props = []): self {
         $properties = [
             '_data' => [],
             '_original' => [],
@@ -143,11 +143,11 @@ class Clause {
      *
      * @return self
      */
-    public function collect($data) {
-        if (\is_array($data) || \is_object($data)) {
-            $data = json_encode($data);
-        }
-        $data = json_decode($data, true);
+    public function collect($data): self {
+        // if (\is_array($data) || \is_object($data)) {
+        //     $data = json_encode($data);
+        // }
+        // $data = json_decode($data, true);
         $this->reProcess();
         $this->fresh();
 
@@ -161,9 +161,9 @@ class Clause {
      * Our system will cache processed data and prevend multiple time processing. If
      * you want to reprocess this method can help you.
      *
-     * @return $this
+     * @return self
      */
-    public function reProcess() {
+    public function reProcess(): self {
         $this->_isProcessed = false;
 
         return $this;
@@ -176,9 +176,9 @@ class Clause {
      *
      * @throws InvalidNodeException
      *
-     * @return $this
+     * @return self
      */
-    public function from($node = null) {
+    public function from($node = null): self {
         $this->_isProcessed = false;
 
         if (null === $node || '' === $node) {
@@ -206,9 +206,9 @@ class Clause {
      *
      * @param array $columns
      *
-     * @return $this
+     * @return self
      */
-    public function select($columns = []) {
+    public function select($columns = []): self {
         if (!\is_array($columns)) {
             $columns = \func_get_args();
         }
@@ -223,9 +223,9 @@ class Clause {
      *
      * @param $offset
      *
-     * @return $this
+     * @return self
      */
-    public function offset($offset) {
+    public function offset($offset): self {
         $this->_offset = $offset;
 
         return $this;
@@ -236,9 +236,9 @@ class Clause {
      *
      * @param $take
      *
-     * @return $this
+     * @return self
      */
-    public function take($take) {
+    public function take($take): self {
         $this->_take = $take;
 
         return $this;
@@ -249,9 +249,9 @@ class Clause {
      *
      * @param array $columns
      *
-     * @return $this
+     * @return self
      */
-    public function except($columns = []) {
+    public function except($columns = []): self {
         if (!\is_array($columns)) {
             $columns = \func_get_args();
         }
@@ -268,9 +268,9 @@ class Clause {
      *
      * @param $delimiter
      *
-     * @return $this
+     * @return self
      */
-    public function setTraveler($delimiter) {
+    public function setTraveler($delimiter): self {
         $this->_traveler = $delimiter;
 
         return $this;
@@ -282,9 +282,12 @@ class Clause {
      * @param string $key
      * @param string $condition
      *
-     * @return $this
+     * @return self
      */
-    public function where($key, $condition = null, $value = null) {
+    public function where($key, $condition = null, $value = null): self {
+        if(is_callable($key)){
+            return $this->callableWhere($key);
+        }
         
         if (null !== $condition && null === $value) {
             $value = $condition;
@@ -310,9 +313,9 @@ class Clause {
      * @param string $key
      * @param string $condition
      *
-     * @return $this
+     * @return self
      */
-    public function orWhere($key = null, $condition = null, $value = null) {
+    public function orWhere($key = null, $condition = null, $value = null): self {
         if (null !== $condition && null === $value) {
             $value = $condition;
             $condition = '=';
@@ -332,9 +335,9 @@ class Clause {
     /**
      * make a callable where condition for custom logic implementation.
      *
-     * @return $this
+     * @return self
      */
-    public function callableWhere(callable $fn) {
+    public function callableWhere(callable $fn): self {
         if (\count($this->_conditions) < 1) {
             $this->_conditions[] = [];
         }
@@ -345,7 +348,7 @@ class Clause {
     /**
      * make a callable orwhere condition for custom logic implementation.
      *
-     * @return $this\
+     * @return $thiself
      */
     public function orCallableWhere(callable $fn) {
         $this->_conditions[] = [];
@@ -361,9 +364,9 @@ class Clause {
      * @param string $key
      * @param array $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereIn($key = null, $value = []) {
+    public function whereIn($key = null, $value = []): self {
         $this->where($key, 'in', $value);
 
         return $this;
@@ -374,9 +377,9 @@ class Clause {
      *
      * @param string $key
      *
-     * @return $this
+     * @return self
      */
-    public function whereNotIn($key = null, $value = []) {
+    public function whereNotIn($key = null, $value = []): self {
         $this->where($key, 'notin', $value);
 
         return $this;
@@ -388,9 +391,9 @@ class Clause {
      * @param $key
      * @param $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereInArray($key, $value) {
+    public function whereInArray($key, $value): self {
         $this->where($key, 'inarray', $value);
 
         return $this;
@@ -402,9 +405,9 @@ class Clause {
      * @param $key
      * @param $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereNotInArray($key, $value) {
+    public function whereNotInArray($key, $value): self {
         $this->where($key, 'notinarray', $value);
 
         return $this;
@@ -415,9 +418,9 @@ class Clause {
      *
      * @param string $key
      *
-     * @return $this
+     * @return self
      */
-    public function whereNull($key = null) {
+    public function whereNull($key = null): self {
         $this->where($key, 'null', 'null');
 
         return $this;
@@ -428,9 +431,9 @@ class Clause {
      *
      * @param string $key
      *
-     * @return $this
+     * @return self
      */
-    public function whereBool($key, $value) {
+    public function whereBool($key, $value): self {
         if (\is_bool($value)) {
             $this->where($key, '==', $value);
         }
@@ -443,9 +446,9 @@ class Clause {
      *
      * @param string $key
      *
-     * @return $this
+     * @return self
      */
-    public function whereNotNull($key) {
+    public function whereNotNull($key): self {
         $this->where($key, 'notnull', 'null');
 
         return $this;
@@ -456,9 +459,9 @@ class Clause {
      *
      * @param $key
      *
-     * @return $this
+     * @return self
      */
-    public function whereExists($key) {
+    public function whereExists($key): self {
         $this->where($key, 'exists', 'null');
 
         return $this;
@@ -469,9 +472,9 @@ class Clause {
      *
      * @param $key
      *
-     * @return $this
+     * @return self
      */
-    public function whereNotExists($key) {
+    public function whereNotExists($key): self {
         $this->where($key, 'notexists', 'null');
 
         return $this;
@@ -483,9 +486,9 @@ class Clause {
      * @param string $key
      * @param string $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereStartsWith($key, $value) {
+    public function whereStartsWith($key, $value): self {
         $this->where($key, 'startswith', $value);
 
         return $this;
@@ -497,9 +500,9 @@ class Clause {
      * @param string $key
      * @param string $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereEndsWith($key, $value) {
+    public function whereEndsWith($key, $value): self {
         $this->where($key, 'endswith', $value);
 
         return $this;
@@ -511,9 +514,9 @@ class Clause {
      * @param string $key
      * @param string $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereMatch($key, $value) {
+    public function whereMatch($key, $value): self {
         $this->where($key, 'match', $value);
 
         return $this;
@@ -525,9 +528,9 @@ class Clause {
      * @param string $key
      * @param string $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereContains($key, $value) {
+    public function whereContains($key, $value): self {
         $this->where($key, 'contains', $value);
 
         return $this;
@@ -539,9 +542,9 @@ class Clause {
      * @param string $key
      * @param string $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereLike($key, $value) {
+    public function whereLike($key, $value): self {
         $this->where($key, 'contains', strtolower($value));
 
         return $this;
@@ -554,9 +557,9 @@ class Clause {
      * @param string $condition
      * @param string $value
      *
-     * @return $this
+     * @return self
      */
-    public function whereDate($key, $condition, $value = null) {
+    public function whereDate($key, $condition, $value = null): self {
         return $this->callableWhere(function($row) use ($key, $condition, $value) {
             $haystack = isset($row[$key]) ? $row[$key] : null;
             $haystack = date('Y-m-d', strtotime($haystack));
@@ -573,9 +576,9 @@ class Clause {
      * @param string $key
      * @param object|string $object
      *
-     * @return $this
+     * @return self
      */
-    public function whereInstance($key, $object) {
+    public function whereInstance($key, $object): self {
         $this->where($key, 'instance', $object);
 
         return $this;
@@ -587,9 +590,9 @@ class Clause {
      * @param string $key
      * @param mixed
      *
-     * @return $this
+     * @return self
      */
-    public function whereAny($key, $value) {
+    public function whereAny($key, $value): self {
         $this->where($key, 'any', $value);
 
         return $this;
@@ -602,9 +605,9 @@ class Clause {
      * @param mixed
      * @param mixed
      *
-     * @return $this
+     * @return self
      */
-    public function whereCount($key, $condition, $value = null) {
+    public function whereCount($key, $condition, $value = null): self {
         return $this->where($key, function($columnValue, $row) use ($value, $condition) {
             $count = 0;
             if (\is_array($columnValue)) {
@@ -639,9 +642,9 @@ class Clause {
     /**
      * Prepare data from desire conditions.
      *
-     * @return $this
+     * @return self
      */
-    protected function prepare() {
+    protected function prepare(): self {
         if ($this->_isProcessed) {
             return $this;
         }
@@ -840,16 +843,23 @@ class Clause {
         if (empty($node) || $node === $this->_traveler) {
             return $data;
         }
-
+        
         // if(is_object($data)) $data = (array) $data;
-
+        
         if (!$node) {
             return new KeyNotExists();
         }
-
-        if (isset($data[$node])) {
-            return $data[$node];
+        
+        if(is_array($data)) {
+            if (isset($data[$node])) {
+                return $data[$node];
+            }
+        }elseif(is_object($data)) {
+            if (isset($data->$node)) {
+                return $data->$node;
+            }
         }
+
 
         if (strpos($node, $this->_traveler) === false) {
             return $default;
@@ -1012,9 +1022,9 @@ class Clause {
      * @param string $key
      * @param string $condition
      *
-     * @return $this
+     * @return self
      */
-    protected function makeWhere($key, $condition = null, $value = null) {
+    protected function makeWhere($key, $condition = null, $value = null): self {
         $current = end($this->_conditions);
         $index = key($this->_conditions);
 

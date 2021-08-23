@@ -40,14 +40,20 @@ if (!function_exists('arrayq')) {
 }
 
 if (!function_exists('linq')) {
-    function linq($data) {
+    /**
+     * initiate linq with given data
+     *
+     * @param array|object|string $data
+     * @return Penobit\Linq\Linq
+     */
+    function linq($data):Penobit\Linq\Linq {
         // if (!is_string($data)) throw new \Penobit\ArrayQuery\Exceptions\InvalidJsonException();
 
         $linq = new Penobit\Linq\Linq();
 
-        if (is_array($data) || is_object($data)) {
-            $data = json_encode($data);
-        }
+        // if (is_array($data) || is_object($data)) {
+        //     $data = json_encode($data);
+        // }
 
         $data = $linq->parseData($data);
 
